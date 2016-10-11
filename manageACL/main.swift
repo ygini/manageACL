@@ -7,15 +7,15 @@ let aclDB = ["ba": "list,search,readattr,readextattr,readsecurity,limit_inherit"
              "rw": "list,add_file,search,add_subdirectory,delete_child,readattr,writeattr,readextattr,writeextattr,readsecurity,file_inherit,directory_inherit",
              "fc": "list,add_file,search,add_subdirectory,delete_child,readattr,writeattr,readextattr,writeextattr,readsecurity,writesecurity,chown,file_inherit,directory_inherit"]
 
-//let aclExplaination = ["ba": "read access without inheritence",
-//                       "ro": "read access on folder and subfolders",
-//                       "rw": "read and write access on folder and subfolders",
-//                       "fc": "full control on folder and subfolders"]
+let aclExplaination = ["ba": "read access without inheritence",
+                       "ro": "read access on folder and subfolders",
+                       "rw": "read and write access on folder and subfolders",
+                       "fc": "full control on folder and subfolders"]
 
-let aclExplaination = ["ba": "accès en lecture seule sans héritage",
-                       "ro": "lecture seule sur le dossier et les sous dossiers",
-                       "rw": "lecture et écriture sur le dossier et les sous dossiers",
-                       "fc": "contrôle complet sur le dossier et les sous dossiers"]
+//let aclExplaination = ["ba": "accès en lecture seule sans héritage",
+//                       "ro": "lecture seule sur le dossier et les sous dossiers",
+//                      "rw": "lecture et écriture sur le dossier et les sous dossiers",
+//                       "fc": "contrôle complet sur le dossier et les sous dossiers"]
 
 let summaryFile = "droits.txt"
 let configFile = ".rights.plist"
@@ -132,12 +132,12 @@ func getACLSummary(_ baseFolder: String, sharePoint: String) -> String {
         return ""
     }
     
-    //var brief = "Access rights for root items in "+sharePoint+" sharepoint are:\n"
-    var brief = "Les droits d'accès pour les éléments racines du partage "+sharePoint+" sont :\n"
+    var brief = "Access rights for root items in "+sharePoint+" sharepoint are:\n"
+    //var brief = "Les droits d'accès pour les éléments racines du partage "+sharePoint+" sont :\n"
     
     for subFolder in rights.keys {
-        //brief += "- For "+subFolder+"\n"
-        brief += "- Pour "+subFolder+"\n"
+        brief += "- For "+subFolder+"\n"
+        //brief += "- Pour "+subFolder+"\n"
         
         let targetFolder = sharePointPath+"/"+subFolder
         
@@ -160,11 +160,11 @@ func getACLSummary(_ baseFolder: String, sharePoint: String) -> String {
             
             let rightHolderInfo: String? = {
                 if groupExist(rightHolder) {
-                    //return "Group "+rightHolder
-                    return "Le groupe "+rightHolder
+                    return "Group "+rightHolder
+                    //return "Le groupe "+rightHolder
                 } else if userExist(rightHolder) {
-                    //return "User "+rightHolder
-                    return "L'utilisateur "+rightHolder
+                    return "User "+rightHolder
+                    //return "L'utilisateur "+rightHolder
                 } else {
                     print("User ID not known: "+rightHolder)
                     return ""
@@ -178,8 +178,8 @@ func getACLSummary(_ baseFolder: String, sharePoint: String) -> String {
                     return ""
                 }
                 
-                //brief += "- - "+rightHolderInfo+" has "+explainedRight+"\n"
-                brief += "- - "+rightHolderInfo+" en "+explainedRight+"\n"
+                brief += "- - "+rightHolderInfo+" has "+explainedRight+"\n"
+                //brief += "- - "+rightHolderInfo+" en "+explainedRight+"\n"
                 
             }
             
@@ -495,6 +495,7 @@ func printHelp() {
 func main() {
     if geteuid() != 0{
         print("This tool must be run as root.")
+        printHelp()
         exit(1)
     }
     
