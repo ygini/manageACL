@@ -410,13 +410,17 @@ func cron(baseFolder: String) {
             if sharePoint.hasPrefix(".") {
                 continue
             }
+            print("Check date change between config and bash file for "+sharePoint)
             let configPath = configFileFor(baseFolder: baseFolder, sharePoint: sharePoint)
             let bashPath = bashFileFor(baseFolder: baseFolder, sharePoint: sharePoint)
             if let configModificationDate = try FileManager.default.attributesOfItem(atPath: configPath)[FileAttributeKey.modificationDate] as! Date?,
                 let bashModificationDate = try FileManager.default.attributesOfItem(atPath: bashPath)[FileAttributeKey.modificationDate] as! Date? {
                 if (configModificationDate > bashModificationDate) {
+                    print("Update needed for "+sharePoint)
                     generateBashFile(baseFolder, sharePoint: sharePoint)
                     writeACLSummary(baseFolder, sharePoint: sharePoint)
+                } else {
+                    print("No update needed for "+sharePoint)
                 }
             }
         }
@@ -532,14 +536,14 @@ func main() {
             generateAllBashFiles(baseFolder)
             writeAllACLSummary(baseFolder)
         }
-        
-        runAllUpdatedScripts()
+	
     case "summary":
         if let sharePoint = sharePoint {
             writeACLSummary(baseFolder, sharePoint: sharePoint)
         } else {
             writeAllACLSummary(baseFolder)
         }
+        
     case "print":
         if let sharePoint = sharePoint {
             printACLSummary(baseFolder, sharePoint: sharePoint)
@@ -558,6 +562,7 @@ func main() {
             print("")
             printHelp()
         }
+        
     case "remove":
         if let sharePoint = sharePoint,
             let subFolder = UserDefaults.standard.string(forKey: "subFolder"),
@@ -568,14 +573,17 @@ func main() {
             print("")
             printHelp()
         }
+        
     case "cron":
         cron(baseFolder: baseFolder)
+        
     default:
         print("Unsupported operation")
         print("")
         printHelp()
     }
     
+    runAllUpdatedScripts()
     
     exit (0)
 }
