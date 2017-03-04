@@ -454,8 +454,6 @@ func runAllUpdatedScripts() {
         let task = Process.init()
         task.launchPath = "/bin/bash"
         task.arguments = [bashFile]
-        task.standardError = Pipe()
-        task.standardOutput = Pipe()
         task.launch()
         task.waitUntilExit()
     }
@@ -510,6 +508,9 @@ func printHelp() {
     print("")
     print("manageACL -baseFolder <base folder path> -operation cron")
     print("\t Run deploy command only if config changed since last deploy (based on update date for "+configFile+" and "+bashFile+"))")
+    print("")
+    print("manageACL -baseFolder <base folder path> -operation cron -cronRedeployOnDay <day of week>")
+    print("\t Run deploy command only if config changed since last deploy (based on update date for "+configFile+" and "+bashFile+")) or if we are on a specific day of week (sunday is 1)")
 }
 
 func main() {
@@ -541,6 +542,7 @@ func main() {
     }
     
     let sharePoint = UserDefaults.standard.string(forKey: "sharePoint")
+    let cronRedeployOnDay = UserDefaults.standard.string(forKey: "cronRedeployOnDay")
     
     switch operation {
     case "deploy":
@@ -590,7 +592,16 @@ func main() {
         }
         
     case "cron":
-        cron(baseFolder: baseFolder)
+        
+        if let currentDayOfWeek = Calendar.current.dateComponents([.weekday], from: Date()).weekday,
+            let deployDay = Int(cronRedeployOnDay!),
+            deployDay == currentDayOfWeek {
+            generateAllBashFiles(baseFolder)
+            writeAllACLSummary(baseFolder)
+
+        } else {
+            cron(baseFolder: baseFolder)
+        }
         
     default:
         print("Unsupported operation")
