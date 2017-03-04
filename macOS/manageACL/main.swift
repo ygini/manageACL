@@ -43,14 +43,14 @@ func configFileFor(baseFolder: String, sharePoint: String) -> String {
 }
 
 func groupExist(_ group: String) -> Bool {
+    
     let task = Process.init()
     task.launchPath = "/usr/bin/dscl"
     task.arguments = ["/Search", "read", "/Groups/"+group]
-    task.standardError = Pipe()
     task.standardOutput = Pipe()
     task.launch()
     task.waitUntilExit()
-    
+
     return task.terminationStatus == 0
 }
 
@@ -59,7 +59,6 @@ func userExist(_ user: String) -> Bool {
     let task = Process.init()
     task.launchPath = "/usr/bin/dscl"
     task.arguments = ["/Search", "read", "/Users/"+user]
-    task.standardError = Pipe()
     task.standardOutput = Pipe()
     task.launch()
     task.waitUntilExit()
