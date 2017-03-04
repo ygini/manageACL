@@ -506,7 +506,6 @@ func printHelp() {
 func main() {
     if geteuid() != 0{
         print("This tool must be run as root.")
-        printHelp()
         exit(1)
     }
     
