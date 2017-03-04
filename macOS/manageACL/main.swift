@@ -105,7 +105,14 @@ func writeAllACLSummary(_ baseFolder: String) {
     print("Writting résumé for all share points")
     do {
         for sharePoint in try FileManager.default.contentsOfDirectory(atPath: baseFolder) {
-            writeACLSummary(baseFolder, sharePoint: sharePoint)
+            let sharePointPath = baseFolder+"/"+sharePoint
+            var isDirectory: ObjCBool = ObjCBool(false)
+            let fileExist = FileManager.default.fileExists(atPath: sharePointPath, isDirectory: &isDirectory)
+            
+            if fileExist && isDirectory.boolValue {
+                writeACLSummary(baseFolder, sharePoint: sharePoint)
+            }
+            
         }
     } catch {
         print("Error, we got exception when writing all breif files for base folder "+baseFolder)
