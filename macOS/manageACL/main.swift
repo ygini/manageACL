@@ -318,7 +318,14 @@ func generateAllBashFiles(_ baseFolder: String) {
     print("Deploying access rights for all share points")
     do {
         for sharePoint in try FileManager.default.contentsOfDirectory(atPath: baseFolder) {
-            generateBashFile(baseFolder, sharePoint: sharePoint)
+            let sharePointPath = baseFolder+"/"+sharePoint
+            var isDirectory: ObjCBool = ObjCBool(false)
+            let fileExist = FileManager.default.fileExists(atPath: sharePointPath, isDirectory: &isDirectory)
+
+            if fileExist && isDirectory.boolValue {
+                generateBashFile(baseFolder, sharePoint: sharePoint)
+            }
+            
         }
     } catch {
         print("Error, exception catched when generating all bash file")
