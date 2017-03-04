@@ -298,15 +298,17 @@ func generateBashFile(_ baseFolder: String, sharePoint: String) {
         try finalBashContent.write(toFile: bashScriptPath, atomically: true, encoding: String.Encoding.utf8)
         allGeneratedBashFiles.append(bashScriptPath)
         
-        let task = Process.init()
-        task.launchPath = "/bin/chmod"
-        task.arguments = ["+x", bashScriptPath]
-        task.standardError = Pipe()
-        task.standardOutput = Pipe()
-        task.launch()
-        task.waitUntilExit()
+        var fileAttributes = [FileAttributeKey : Any]()
+        fileAttributes[.posixPermissions] = 0o755
+        
+        do {
+            try FileManager.default.setAttributes(fileAttributes, ofItemAtPath: bashScriptPath)
+        } catch let error {
+            print("Unable to set bash file as executable: ", error)
+        }
         
         print("Bash file written at: "+bashScriptPath)
+        print("")
     } catch {
         print("Error, impossible to write bash file at "+bashScriptPath)
     }
