@@ -7,17 +7,24 @@ let aclDB = ["ba": "list,search,readattr,readextattr,readsecurity,limit_inherit"
              "rw": "list,add_file,search,add_subdirectory,delete_child,readattr,writeattr,readextattr,writeextattr,readsecurity,file_inherit,directory_inherit",
              "fc": "list,add_file,search,add_subdirectory,delete_child,readattr,writeattr,readextattr,writeextattr,readsecurity,writesecurity,chown,file_inherit,directory_inherit"]
 
-let aclExplaination = ["ba": "read access without inheritence",
+let aclExplaination : [String : String]
+let summaryFile : String
+
+if let currentLanguageCode = Locale.current.languageCode, currentLanguageCode == "fr" {
+    summaryFile = "droits.txt"
+    aclExplaination = ["ba": "accès en lecture seule sans héritage",
+                       "ro": "lecture seule sur le dossier et les sous dossiers",
+                       "rw": "lecture et écriture sur le dossier et les sous dossiers",
+                       "fc": "contrôle complet sur le dossier et les sous dossiers"]
+    
+} else {
+    summaryFile = "rights.txt"
+    aclExplaination = ["ba": "read access without inheritence",
                        "ro": "read access on folder and subfolders",
                        "rw": "read and write access on folder and subfolders",
                        "fc": "full control on folder and subfolders"]
+}
 
-//let aclExplaination = ["ba": "accès en lecture seule sans héritage",
-//                       "ro": "lecture seule sur le dossier et les sous dossiers",
-//                      "rw": "lecture et écriture sur le dossier et les sous dossiers",
-//                       "fc": "contrôle complet sur le dossier et les sous dossiers"]
-
-let summaryFile = "droits.txt"
 let configFile = ".rights.plist"
 let bashFile = ".rights.sh"
 
