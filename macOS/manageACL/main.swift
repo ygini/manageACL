@@ -211,6 +211,7 @@ func generateBashFile(_ baseFolder: String, sharePoint: String) {
     var groupsForSharePointAccess = [String]()
     var finalBashContent = "chflags -R nouchg \"" + sharePointPath + "\" \n"
     finalBashContent += "chmod -RN \"" + sharePointPath + "\" \n"
+    finalBashContent += "chmod +ai \"user:_spotlight allow list,search,file_inherit,directory_inherit\" \"" + sharePointPath + "\" \n"
     
     var isDirectory: ObjCBool = ObjCBool(false)
     var fileExist = FileManager.default.fileExists(atPath: sharePointPath, isDirectory: &isDirectory)
@@ -274,6 +275,7 @@ func generateBashFile(_ baseFolder: String, sharePoint: String) {
             }
             
         }
+        finalBashContent += "chmod +ai \"user:_spotlight allow list,search,file_inherit,directory_inherit\" \"" + targetFolder + "\" \n"
     }
     
     for rightHolder in groupsForSharePointAccess {
