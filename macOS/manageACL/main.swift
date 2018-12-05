@@ -600,9 +600,9 @@ func main() {
         }
         
     case "cron":
-        
-        if let currentDayOfWeek = Calendar.current.dateComponents([.weekday], from: Date()).weekday,
-            let deployDay = Int(cronRedeployOnDay!),
+        if let cronRedeployOnDay = cronRedeployOnDay,
+            let currentDayOfWeek = Calendar.current.dateComponents([.weekday], from: Date()).weekday,
+            let deployDay = Int(cronRedeployOnDay),
             deployDay == currentDayOfWeek {
             generateAllBashFiles(baseFolder)
             writeAllACLSummary(baseFolder)
